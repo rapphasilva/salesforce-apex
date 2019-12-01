@@ -1,0 +1,29 @@
+@isTest
+public class UpdateAccountOpp_test {
+
+    @testSetup
+    public static void MakeData(){
+        
+        Account acc = new Account(	Name = 'Conta Teste A');
+        insert acc;
+        
+        Opportunity opp = new Opportunity(	Name = 'Teste Opp A',
+                                         	CloseDate = System.today(),
+            								StageName = 'Needs Analysis',
+                                         	AccountId = acc.Id);
+        insert opp;
+    }
+    
+    @isTest
+    public static void updateAcc(){
+
+		UpdateAccountOpp.updateOpp();
+        Opportunity opp = [select Id, StageName from Opportunity where Name =: 'Teste Opp A' limit 1];
+        opp.StageName = 'Closed Won';
+        update opp;
+        
+        Account acc = [select Id, Name/*, (List<Opportunity> oppList = [select Id, Name from Opportunity])*/ from Account where Name =: 'Conta Teste B' limit 1];
+        acc.Name += '1';
+        update acc;
+    }
+}

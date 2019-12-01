@@ -1,0 +1,23 @@
+@RestResource(urlMapping='/acc-con-opp/*')
+global with sharing class AccountConOppRest{
+
+	@HttpPost
+    global static void processPost(){
+
+        RestRequest request = RestContext.request;
+        String endpoint = request.requestURI.substring(request.requestURI.lastIndexOf('/')+1);
+   
+        if(endpoint == 'insert-account'){
+
+            //retrieve the data of the request body
+            List<Account> acc = (List<Account>)JSON.deserializeStrict(RestContext.request.requestBody.toString(), List<Account>.class);
+            
+            insert acc;
+            
+            //faz o retorno
+            RestResponse res = RestContext.response;
+            res.responseBody = Blob.valueOf('Conta, contato e oportunidade criadas com sucesso!');
+            res.statusCode = 200;
+        }
+    }
+}

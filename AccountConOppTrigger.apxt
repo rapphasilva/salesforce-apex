@@ -1,0 +1,39 @@
+trigger AccountConOppTrigger on Account (before insert, before update, after insert, after update) {
+
+    if(Trigger.isBefore){
+        if(Trigger.isInsert){
+            
+    	}
+        if(Trigger.isUpdate){
+            
+        }
+    }
+    
+    if(Trigger.isAfter){
+        if(Trigger.isInsert){
+            for(Account acc : Trigger.new){
+                If(acc.Rating == 'Conta integrada'){
+                    
+                    Contact con = new Contact(	LastName = acc.Name,
+                                              	Phone = acc.Phone,
+                                         		AccountId = acc.Id);
+                    insert con;
+                    
+                    Opportunity opp = new Opportunity(	Name = acc.Name,
+                                         				CloseDate = System.today(),
+            											StageName = 'Prospecting',
+                                         				AccountId = acc.Id);
+        			insert opp;
+                    
+                    OpportunityContactRole ocr = new OpportunityContactRole(	ContactId = con.Id,
+                                                                           		OpportunityId = opp.Id,
+                                                                           		IsPrimary = TRUE);
+                    insert ocr;
+                }
+            }
+    	}
+        if(Trigger.isUpdate){
+            
+        }
+    }
+}

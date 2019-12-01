@@ -1,0 +1,16 @@
+@isTest
+public class AccountConOppTrigger_test {
+
+    @testSetup
+    public static void MakeData(){
+        
+        Account acc = new Account(	Name = 'Conta Teste A',
+                                 	Phone = '11966665555',
+                                 	Rating = 'Conta integrada');
+        insert acc;
+    }
+    @isTest
+    public static void testTrigger(){
+        
+    }
+}

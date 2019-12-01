@@ -1,0 +1,43 @@
+public class UpdateAccountOpp {
+
+    //metodo que pertence a classe
+    public static void updateOpp(){
+       
+        //lista usada para colocar todas as oportunidades e atualizar de uma vez
+        List<Opportunity> oppUpdateList = new List<Opportunity>();
+       
+        //consulta das contas e oportunidade relacionadas que possuam o stage = 'Needs Analysis'
+        List<Account> accList = [SELECT Id, Name,
+                                                 (SELECT
+                                                  Id,
+                                                  Name,
+                                                  StageName
+                                                  FROM Opportunities
+                                                  WHERE StageName = 'Needs Analysis')
+                                 FROM Account];
+       
+        //loop em todos registros de conta
+        for(Account acc : accList){
+           
+            //se a conta não possuir oportunidade passa para o proximo registro "continue"
+            if(acc.Opportunities.isEmpty()){
+                continue;
+               
+            //caso a conta possua oportunidade coloca elas em um loop para alterar todos registros
+            } else {
+               
+                //loop de oportunidade
+                for(Opportunity opp : acc.Opportunities){
+                   
+                    //altera o valor do campo StageName
+                    opp.StageName = 'Negotiation/Review';
+                   
+                    //coloca a oportunidade alterada em uma lista para atualizar depois
+                    oppUpdateList.add(opp);
+                }
+            }
+        }
+        //atualiza todas oportunidades em uma chamada DML (melhor pratica)
+        update oppUpdateList;
+    }
+}
